@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Simple Room Placement
   m_EditorClassIdentifier: 
   _maxSteps: 100
-  _maxRooms: 2
+  _maxRooms: 5
   _minSize: {x: 12, y: 16}
   _maxSize: {x: 16, y: 24}
   _allRooms:

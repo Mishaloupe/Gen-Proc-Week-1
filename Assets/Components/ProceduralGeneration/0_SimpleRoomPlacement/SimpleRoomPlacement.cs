@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Cysharp.Threading.Tasks;
+using System;
+using System.Collections.Generic;
 using System.Threading;
-using Cysharp.Threading.Tasks;
-using NUnit.Framework;
 using UnityEngine;
 using VTools.Grid;
 using VTools.ScriptableObjectDatabase;
@@ -12,15 +12,23 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
     public class SimpleRoomPlacement : ProceduralGenerationMethod
     {
         [Header("Room Parameters")]
-        [SerializeField] private int _maxRooms = 10;
-        [SerializeField] private Vector2 _minSize = new Vector2(12,16);
-        [SerializeField] private Vector2 _maxSize = new Vector2(16,24);
+        [SerializeField] private int _maxRooms = 5;
+        [SerializeField] private Vector2 _minSize = new Vector2(6, 8);
+        [SerializeField] private Vector2 _maxSize = new Vector2(12, 20);
         [SerializeField] private List<RectInt> _allRooms = new();
-        
+
         protected override async UniTask ApplyGeneration(CancellationToken cancellationToken)
         {
-            int roomPlaced = 0;
             _allRooms.Clear();
+
+            await BuildRooms(cancellationToken);
+            await BuildCorridors(cancellationToken);
+            BuildGround();
+        }
+
+        private async UniTask BuildRooms(CancellationToken cancellationToken)
+        {
+            int roomPlaced = 0;
 
             for (int i = 0; i < _maxSteps; i++)
             {
@@ -29,81 +37,79 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
                 if (roomPlaced < _maxRooms)
                 {
                     RectInt roomRect = new((int)RandomService.Range(0, Grid.Width - _maxSize.x), (int)RandomService.Range(0, Grid.Lenght - _maxSize.y), (int)RandomService.Range(_minSize.x, _maxSize.x), (int)RandomService.Range(_minSize.y, _maxSize.y));
-                    //RectInt roomRect = new RectInt(10,10,10,10);
-                    Debug.Log("x : " + roomRect.x + " y : " + roomRect.y + " width : " + roomRect.width + " height : " + roomRect.height);
-                    if (CanPlaceRoom(roomRect, 1))
+                    if (CanPlaceRoom(roomRect, 2))
                     {
                         roomPlaced++;
                         _allRooms.Add(roomRect);
-                        Debug.Log(roomPlaced);
                         for (int j = roomRect.xMin; j < roomRect.xMax; j++)
                         {
                             for (int k = roomRect.yMin; k < roomRect.yMax; k++)
                             {
-                                Debug.Log("x : " + j + " y : " + k);
                                 if (!Grid.TryGetCellByCoordinates(j, k, out var chosenCell))
                                 {
-                                    Debug.LogError($"Unable to get cell on coordinates : ({j}, {k})");
                                     continue;
                                 }
-                                Debug.Log("Room placée");
                                 AddTileToCell(chosenCell, ROOM_TILE_NAME, true);
                             }
                         }
                     }
-                } else
+                }
+                else
                 {
                     break;
                 }
                 // Waiting between steps to see the result.
-                await UniTask.Delay(GridGenerator.StepDelay, cancellationToken : cancellationToken);
-            }
-
-            for (int i = 0; i < _maxSteps; i++)
-            {
-
-
-                // Check for cancellation
-                cancellationToken.ThrowIfCancellationRequested();
-
-                for (int j = 0; j < _allRooms.Count - 1; j++)
-                {
-                    RectInt room1 = _allRooms[j];
-                    RectInt room2 = _allRooms[j+1];
-
-                    for (int x = room1.x; x < room2.x; x++)
-                    {
-                        if (!Grid.TryGetCellByCoordinates(x, room1.y, out var chosenCell))
-                        {
-                            Debug.LogError($"Unable to get cell on coordinates : ({x}, {room1.y})");
-                            continue;
-                        }
-                        Debug.Log($"Chemin placé : ({x}, {room1.y})");
-                        AddTileToCell(chosenCell, SAND_TILE_NAME, true);
-                    }
-
-                    for (int y = room1.y; y < room2.y; y++)
-                    {
-                        if (!Grid.TryGetCellByCoordinates(room2.x, y, out var chosenCell))
-                        {
-                            Debug.LogError($"Unable to get cell on coordinates : ({room2.x}, {y})");
-                            continue;
-                        }
-                        Debug.Log($"Chemin placé : ({room2.x}, {y})");
-                        AddTileToCell(chosenCell, SAND_TILE_NAME, true);
-                    }
-                }
-                
-                // Waiting between steps to see the result.
                 await UniTask.Delay(GridGenerator.StepDelay, cancellationToken: cancellationToken);
             }
-            // Final ground building.
-            BuildGround();
         }
-        
+
+        private async UniTask BuildCorridors(CancellationToken cancellationToken)
+        {
+            // Check for cancellation
+            cancellationToken.ThrowIfCancellationRequested();
+
+            for (int j = 0; j < _allRooms.Count - 1; j++)
+            {
+                RectInt room1 = _allRooms[j];
+                RectInt room2 = _allRooms[j + 1];
+
+                int x1 = room1.x + (room1.width / 2);
+                int y1 = room1.y + (room1.height / 2);
+                int x2 = room2.x + (room2.width / 2);
+                int y2 = room2.y + (room2.height / 2);
+
+                BuildHorizontalCorridor(x1, y1, x2, y2);
+                BuildVerticalCorridor(x1, y1, x2, y2);
+
+                await UniTask.Delay(GridGenerator.StepDelay, cancellationToken: cancellationToken);
+            }
+        }
+
+        private void BuildHorizontalCorridor(int x1, int y1, int x2, int y2)
+        {
+            for (int x = Mathf.Min(x1, x2); x <= Mathf.Max(x1, x2); x++)
+            {
+                if (Grid.TryGetCellByCoordinates(x, y1, out var chosenCell) && !chosenCell.ContainObject)
+                {
+                    AddTileToCell(chosenCell, CORRIDOR_TILE_NAME, true);
+                }
+            }
+        }
+
+        private void BuildVerticalCorridor(int x1, int y1, int x2, int y2)
+        {
+            for (int y = Mathf.Min(y1, y2); y <= Mathf.Max(y1, y2); y++)
+            {
+                if (Grid.TryGetCellByCoordinates(x2, y, out var chosenCell) && !chosenCell.ContainObject)
+                {
+                    AddTileToCell(chosenCell, CORRIDOR_TILE_NAME, true);
+                }
+            }
+        }
+
         private void BuildGround()
         {
-            
+
             // Instantiate ground blocks
             for (int x = 0; x < Grid.Width; x++)
             {
@@ -111,10 +117,8 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
                 {
                     if (!Grid.TryGetCellByCoordinates(x, z, out var chosenCell))
                     {
-                        Debug.LogError($"Unable to get cell on coordinates : ({x}, {z})");
                         continue;
                     }
-                    
                     AddTileToCell(chosenCell, GRASS_TILE_NAME, false);
                 }
             }
