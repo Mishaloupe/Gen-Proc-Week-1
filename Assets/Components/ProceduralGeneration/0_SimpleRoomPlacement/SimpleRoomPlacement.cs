@@ -1,8 +1,11 @@
 ﻿using Cysharp.Threading.Tasks;
 using System;
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Threading;
+using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UIElements;
 using VTools.Grid;
 using VTools.ScriptableObjectDatabase;
 
@@ -73,39 +76,150 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
                 RectInt room1 = _allRooms[j];
                 RectInt room2 = _allRooms[j + 1];
 
-                int x1 = room1.x + (room1.width / 2);
-                int y1 = room1.y + (room1.height / 2);
-                int x2 = room2.x + (room2.width / 2);
-                int y2 = room2.y + (room2.height / 2);
+                
 
-                BuildHorizontalCorridor(x1, y1, x2, y2);
-                BuildVerticalCorridor(x1, y1, x2, y2);
+                BuildHorizontalCorridor(room1, room2);
+                BuildVerticalCorridor(room1, room2);
 
                 await UniTask.Delay(GridGenerator.StepDelay, cancellationToken: cancellationToken);
             }
         }
 
-        private void BuildHorizontalCorridor(int x1, int y1, int x2, int y2)
+        private void BuildHorizontalCorridor(RectInt room1, RectInt room2)
         {
+
+            int x1 = room1.x + (room1.width / 2);
+            int y1 = room1.y + (room1.height / 2);
+            int x2 = room2.x + (room2.width / 2);
+            int y2 = room2.y + (room2.height / 2);
+
+            bool hasMoved = false;
+            int offset = 0;
+
             for (int x = Mathf.Min(x1, x2); x <= Mathf.Max(x1, x2); x++)
             {
-                if (Grid.TryGetCellByCoordinates(x, y1, out var chosenCell)/* && !chosenCell.ContainObject*/)
+                int baseY = y1;
+                if (Grid.TryGetCellByCoordinates(x, baseY, out var chosenCell)/* && !chosenCell.ContainObject*/)
                 {
-                    AddTileToCell(chosenCell, CORRIDOR_TILE_NAME, true);
+                    Vector2Int position = new(x, baseY);
+                    if (IsPositionInRoom(position, out int roomIndex))
+                    {
+                        if (_allRooms[roomIndex] == room1 || _allRooms[roomIndex] == room2)
+                        {
+                            AddTileToCell(chosenCell, ROCK_TILE_NAME, true);
+                        }
+                        else
+                        {
+                            while (IsPositionInRoom(position, out int roomIndexTest))
+                            {
+                                baseY++;
+                                position.y = baseY;
+                                offset = baseY;
+                                if (!hasMoved)
+                                {
+                                    if (Grid.TryGetCellByCoordinates(x - 1, baseY, out var decalage))
+                                    {
+                                        AddTileToCell(decalage, SAND_TILE_NAME, true);
+                                    }
+                                }
+                            }
+                            hasMoved = true;
+                            if (Grid.TryGetCellByCoordinates(x, baseY, out chosenCell))
+                            {
+                                AddTileToCell(chosenCell, SAND_TILE_NAME, true);
+                            }
+                            //AddTileToCell(chosenCell, SAND_TILE_NAME, true);
+                        }
+                    }
+                    else
+                    {
+                        if (hasMoved)
+                        {
+                            while (offset >= baseY)
+                            {
+                                if (Grid.TryGetCellByCoordinates(x, offset, out chosenCell))
+                                {
+                                    AddTileToCell(chosenCell, SAND_TILE_NAME, true);
+                                }
+                                offset--;
+                            }
+                            hasMoved = false;
+                        }
+                        else
+                        {
+                            AddTileToCell(chosenCell, CORRIDOR_TILE_NAME, true);
+                        }
+                    }
                 }
             }
         }
 
-        private void BuildVerticalCorridor(int x1, int y1, int x2, int y2)
+        private void BuildVerticalCorridor(RectInt room1, RectInt room2)
         {
+
+            int x1 = room1.x + (room1.width / 2);
+            int y1 = room1.y + (room1.height / 2);
+            int x2 = room2.x + (room2.width / 2);
+            int y2 = room2.y + (room2.height / 2);
+
+            bool hasMoved = false;
+            int offset = 0;
+
             for (int y = Mathf.Min(y1, y2); y <= Mathf.Max(y1, y2); y++)
             {
-                if (Grid.TryGetCellByCoordinates(x2, y, out var chosenCell)/* && !chosenCell.ContainObject*/)
+                int baseX = x2;
+                if (Grid.TryGetCellByCoordinates(baseX, y, out var chosenCell)/* && !chosenCell.ContainObject*/)
                 {
-                    AddTileToCell(chosenCell, CORRIDOR_TILE_NAME, true);
+                    Vector2Int position = new(baseX, y);
+                    if (IsPositionInRoom(position, out int roomIndex))
+                    {
+                        if (_allRooms[roomIndex] == room1 ||  _allRooms[roomIndex] == room2)
+                        {
+                            AddTileToCell(chosenCell, ROCK_TILE_NAME, true);
+                        } else
+                        {
+                            while (IsPositionInRoom(position, out int roomIndexTest))
+                            {
+                                baseX++;
+                                position.x = baseX;
+                                offset = baseX;
+                                if (!hasMoved)
+                                {
+                                    if (Grid.TryGetCellByCoordinates(baseX, y-1, out var decalage))
+                                    {
+                                        AddTileToCell(decalage, SAND_TILE_NAME, true);
+                                    }
+                                }
+                            }
+                            hasMoved = true;
+                            if (Grid.TryGetCellByCoordinates(baseX, y, out chosenCell)) {
+                                AddTileToCell(chosenCell, SAND_TILE_NAME, true);
+                            }
+                            //AddTileToCell(chosenCell, SAND_TILE_NAME, true);
+                        }
+                    }
+                    else
+                    {
+                        if (hasMoved)
+                        {
+                            while (offset >= baseX)
+                            {
+                                if (Grid.TryGetCellByCoordinates(offset, y, out chosenCell))
+                                {
+                                    AddTileToCell(chosenCell, SAND_TILE_NAME, true);
+                                }
+                                offset--;
+                            }
+                            hasMoved = false;
+                        } else
+                        {
+                            AddTileToCell(chosenCell, CORRIDOR_TILE_NAME, true);
+                        }
+                    }
                 }
             }
         }
+
 
         private void BuildGround()
         {
@@ -122,6 +236,20 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
                     AddTileToCell(chosenCell, GRASS_TILE_NAME, false);
                 }
             }
+        }
+
+        public bool IsPositionInRoom(Vector2Int position, out int roomIndex)
+        {
+            for (int i = 0; i < _allRooms.Count; i++)
+            {
+                if (_allRooms[i].Contains(position))
+                {
+                    roomIndex = i;
+                    return true;
+                }
+            }
+            roomIndex = -1;
+            return false;
         }
     }
 }
