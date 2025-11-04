@@ -27,5 +27,21 @@ MonoBehaviour:
     y: 29
     width: 64
     height: 35
+  - x: 0
+    y: 0
+    width: 64
+    height: 11
+  - x: 0
+    y: 11
+    width: 64
+    height: 18
+  - x: 0
+    y: 29
+    width: 43
+    height: 35
+  - x: 43
+    y: 29
+    width: 21
+    height: 35
   _minSize: {x: 6, y: 8}
   _maxSize: {x: 12, y: 20}
