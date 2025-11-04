@@ -89,7 +89,7 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
         {
             for (int x = Mathf.Min(x1, x2); x <= Mathf.Max(x1, x2); x++)
             {
-                if (Grid.TryGetCellByCoordinates(x, y1, out var chosenCell) && !chosenCell.ContainObject)
+                if (Grid.TryGetCellByCoordinates(x, y1, out var chosenCell)/* && !chosenCell.ContainObject*/)
                 {
                     AddTileToCell(chosenCell, CORRIDOR_TILE_NAME, true);
                 }
@@ -100,7 +100,7 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
         {
             for (int y = Mathf.Min(y1, y2); y <= Mathf.Max(y1, y2); y++)
             {
-                if (Grid.TryGetCellByCoordinates(x2, y, out var chosenCell) && !chosenCell.ContainObject)
+                if (Grid.TryGetCellByCoordinates(x2, y, out var chosenCell)/* && !chosenCell.ContainObject*/)
                 {
                     AddTileToCell(chosenCell, CORRIDOR_TILE_NAME, true);
                 }
