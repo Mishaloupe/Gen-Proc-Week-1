@@ -411,8 +411,8 @@ MonoBehaviour:
   _cellSize: 1
   _startPosition: {x: 0, y: 0, z: 0}
   _generationMethod: {fileID: 11400000, guid: 6d039395dd02e94468596c445c26d26a, type: 2}
-  _drawDebug: 1
-  _seed: 1212
+  _drawDebug: 0
+  _seed: 1313
   _stepDelay: 100
 --- !u!4 &1922166660
 Transform:

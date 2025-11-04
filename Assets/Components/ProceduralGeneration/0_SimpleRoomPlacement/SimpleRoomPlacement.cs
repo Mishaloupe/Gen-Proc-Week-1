@@ -93,6 +93,9 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
             int x2 = room2.x + (room2.width / 2);
             int y2 = room2.y + (room2.height / 2);
 
+            bool hasMoved = false;
+            int offset = 0;
+
             for (int x = Mathf.Min(x1, x2); x <= Mathf.Max(x1, x2); x++)
             {
                 int baseY = y1;
@@ -111,7 +114,16 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
                             {
                                 baseY++;
                                 position.y = baseY;
+                                offset = baseY;
+                                if (!hasMoved)
+                                {
+                                    if (Grid.TryGetCellByCoordinates(x - 1, baseY, out var decalage))
+                                    {
+                                        AddTileToCell(decalage, SAND_TILE_NAME, true);
+                                    }
+                                }
                             }
+                            hasMoved = true;
                             if (Grid.TryGetCellByCoordinates(x, baseY, out chosenCell))
                             {
                                 AddTileToCell(chosenCell, SAND_TILE_NAME, true);
@@ -121,7 +133,22 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
                     }
                     else
                     {
-                        AddTileToCell(chosenCell, CORRIDOR_TILE_NAME, true);
+                        if (hasMoved)
+                        {
+                            while (offset >= baseY)
+                            {
+                                if (Grid.TryGetCellByCoordinates(x, offset, out chosenCell))
+                                {
+                                    AddTileToCell(chosenCell, SAND_TILE_NAME, true);
+                                }
+                                offset--;
+                            }
+                            hasMoved = false;
+                        }
+                        else
+                        {
+                            AddTileToCell(chosenCell, CORRIDOR_TILE_NAME, true);
+                        }
                     }
                 }
             }
@@ -134,6 +161,9 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
             int y1 = room1.y + (room1.height / 2);
             int x2 = room2.x + (room2.width / 2);
             int y2 = room2.y + (room2.height / 2);
+
+            bool hasMoved = false;
+            int offset = 0;
 
             for (int y = Mathf.Min(y1, y2); y <= Mathf.Max(y1, y2); y++)
             {
@@ -152,7 +182,16 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
                             {
                                 baseX++;
                                 position.x = baseX;
+                                offset = baseX;
+                                if (!hasMoved)
+                                {
+                                    if (Grid.TryGetCellByCoordinates(baseX, y-1, out var decalage))
+                                    {
+                                        AddTileToCell(decalage, SAND_TILE_NAME, true);
+                                    }
+                                }
                             }
+                            hasMoved = true;
                             if (Grid.TryGetCellByCoordinates(baseX, y, out chosenCell)) {
                                 AddTileToCell(chosenCell, SAND_TILE_NAME, true);
                             }
@@ -161,7 +200,21 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
                     }
                     else
                     {
-                        AddTileToCell(chosenCell, CORRIDOR_TILE_NAME, true);
+                        if (hasMoved)
+                        {
+                            while (offset >= baseX)
+                            {
+                                if (Grid.TryGetCellByCoordinates(offset, y, out chosenCell))
+                                {
+                                    AddTileToCell(chosenCell, SAND_TILE_NAME, true);
+                                }
+                                offset--;
+                            }
+                            hasMoved = false;
+                        } else
+                        {
+                            AddTileToCell(chosenCell, CORRIDOR_TILE_NAME, true);
+                        }
                     }
                 }
             }
