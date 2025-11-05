@@ -16,7 +16,12 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
     public class BSP : ProceduralGenerationMethod
     {
         [Header("Room Parameters")]
+        [Range(0, 20)]
         [SerializeField] private int _maxRooms = 5;
+        [Range(0.0f, 1.0f)]
+        [SerializeField] private float chanceCutHorizontal = 0.5f;
+        [Range(0.0f, 1.0f)]
+        [SerializeField] private float chanceHorizontalCorridorFirst = 0.5f;
         private List<Node> _listNodes = new();
         [SerializeField] private List<RectInt> _listRooms = new();
         [SerializeField] private List<RectInt> _listRectNodes; //debug
@@ -100,7 +105,7 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
 
         private void Cut(Node parent)
         {
-            bool dir = RandomService.Chance(0.5f);
+            bool dir = RandomService.Chance(chanceCutHorizontal);
 
             if (dir == true && parent.rect.width > _minSize.x * 2)
             {
@@ -170,9 +175,19 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
 
             if (room1.HasValue && room2.HasValue)
             {
-                BuildHorizontalCorridor(room1.Value, room2.Value);
-                BuildVerticalCorridor(room1.Value, room2.Value);
-                await UniTask.Delay(GridGenerator.StepDelay, cancellationToken: cancellationToken);
+                if (RandomService.Chance(chanceHorizontalCorridorFirst))
+                {
+                    Debug.Log("hor");
+                    BuildHorizontalCorridor(room1.Value, room2.Value);
+                    BuildVerticalCorridor(room1.Value, room2.Value);
+                } else
+                {
+                    Debug.Log("ver");
+                    BuildVerticalCorridor(room1.Value, room2.Value);
+                    BuildHorizontalCorridor(room1.Value, room2.Value);
+                }
+
+                    await UniTask.Delay(GridGenerator.StepDelay, cancellationToken: cancellationToken);
             }
         }
 
@@ -235,7 +250,7 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
                         {
                             while (IsPositionInRoom(position, out int roomIndexTest))
                             {
-                                if (y2 > y1)
+                                if (_listRooms[roomIndexTest].y + (_listRooms[roomIndexTest].height / 2) > y1)
                                 {
                                     baseY++;
                                     position.y = baseY;
@@ -332,7 +347,7 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
                         {
                             while (IsPositionInRoom(position, out int roomIndexTest))
                             {
-                                if (x2 > x1)
+                                if (x2 > _listRooms[roomIndexTest].x + (_listRooms[roomIndexTest].width / 2))
                                 {
                                     baseX++;
                                     position.x = baseX;
@@ -342,6 +357,7 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
                                         if (Grid.TryGetCellByCoordinates(baseX, y - 1, out var decalage))
                                         {
                                             AddTileToCell(decalage, SAND_TILE_NAME, true);
+                                            new WaitForSeconds(1);
                                         }
                                     }
                                 }
