@@ -410,10 +410,10 @@ MonoBehaviour:
   _gridYValue: 64
   _cellSize: 1
   _startPosition: {x: 0, y: 0, z: 0}
-  _generationMethod: {fileID: 11400000, guid: 2a7673d041729004285eefad840ddf06, type: 2}
+  _generationMethod: {fileID: 11400000, guid: a5883eb836244794a9661968edaa4a51, type: 2}
   _drawDebug: 0
   _seed: 6767
-  _stepDelay: 1000
+  _stepDelay: 1
 --- !u!4 &1922166660
 Transform:
   m_ObjectHideFlags: 0
