@@ -82,7 +82,7 @@ namespace Components.ProceduralGeneration
             {
                 for (int iy = yMin; iy < yMax; iy++)
                 {
-                    if (Grid.TryGetCellByCoordinates(ix, iy, out var cell) && cell.ContainObject && cell.GridObject.Template.Name == "Room") 
+                    if (Grid.TryGetCellByCoordinates(ix, iy, out var cell, out var _) && cell.ContainObject && cell.GridObject.Template.Name == "Room") 
                         return false;
                 }
             }
@@ -90,10 +90,10 @@ namespace Components.ProceduralGeneration
             return true;
         }
         
-        protected void AddTileToCell(Cell cell, string tileName, bool overrideExistingObjects)
+        protected void AddTileToCell(Cell cell, string tileName, bool overrideExistingObjects, bool isTop = true)
         {
             var tileTemplate = ScriptableObjectDatabase.GetScriptableObject<GridObjectTemplate>(tileName);
-            GridGenerator.AddGridObjectToCell(cell, tileTemplate, overrideExistingObjects);
+            GridGenerator.AddGridObjectToCell(cell, tileTemplate, overrideExistingObjects, isTop);
         }
     }
 }

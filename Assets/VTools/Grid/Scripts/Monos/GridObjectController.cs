@@ -30,10 +30,16 @@ namespace VTools.Grid
             GridObject.Rotate(angle);
         }
 
-        public void AddToGrid(Cell cell, Grid grid, Transform parent)
+        public void AddToGrid(Cell cell, Grid grid, Transform parent, bool isTop)
         {
             GridObject.SetGridData(cell, grid);
-            MoveTo(cell.GetCenterPosition(grid.OriginPosition));
+            if (!isTop)
+            {
+                MoveTo(cell.GetCenterPosition(new Vector3(parent.position.x, parent.position.y - 10, parent.position.z)));
+            } else
+            {
+                MoveTo(cell.GetCenterPosition(parent.position));
+            }
         }
     }
 }

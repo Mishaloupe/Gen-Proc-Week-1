@@ -91,11 +91,11 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
                 {
                     for (int k = newRoom.yMin; k < newRoom.yMax; k++)
                     {
-                        if (!Grid.TryGetCellByCoordinates(j, k, out var chosenCell))
+                        if (!Grid.TryGetCellByCoordinates(j, k, out var chosenCell, out var _))
                         {
                             continue;
                         }
-                        AddTileToCell(chosenCell, ROOM_TILE_NAME, true);
+                        AddTileToCell(chosenCell, ROOM_TILE_NAME, true, true);
                     }
                 }
 
@@ -144,11 +144,11 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
             {
                 for (int z = 0; z < Grid.Lenght; z++)
                 {
-                    if (!Grid.TryGetCellByCoordinates(x, z, out var chosenCell))
+                    if (!Grid.TryGetCellByCoordinates(x, z, out var chosenCell, out var _))
                     {
                         continue;
                     }
-                    AddTileToCell(chosenCell, GRASS_TILE_NAME, false);
+                    AddTileToCell(chosenCell, GRASS_TILE_NAME, false, true);
                 }
             }
         }
@@ -237,14 +237,14 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
             for (int x = Mathf.Min(x1, x2); x <= Mathf.Max(x1, x2); x++)
             {
                 int baseY = y1;
-                if (Grid.TryGetCellByCoordinates(x, baseY, out var chosenCell))
+                if (Grid.TryGetCellByCoordinates(x, baseY, out var chosenCell, out var _))
                 {
                     Vector2Int position = new(x, baseY);
                     if (IsPositionInRoom(position, out int roomIndex))
                     {
                         if (_listRooms[roomIndex] == room1 || _listRooms[roomIndex] == room2)
                         {
-                            AddTileToCell(chosenCell, ROCK_TILE_NAME, true);
+                            AddTileToCell(chosenCell, ROCK_TILE_NAME, true, true);
                         }
                         else
                         {
@@ -257,9 +257,9 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
                                     offset = baseY;
                                     if (!hasMoved)
                                     {
-                                        if (Grid.TryGetCellByCoordinates(x - 1, baseY, out var decalage))
+                                        if (Grid.TryGetCellByCoordinates(x - 1, baseY, out var decalage, out var _))
                                         {
-                                            AddTileToCell(decalage, SAND_TILE_NAME, true);
+                                            AddTileToCell(decalage, SAND_TILE_NAME, true, true);
                                         }
                                     }
                                 }
@@ -270,17 +270,17 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
                                     offset = baseY;
                                     if (!hasMoved)
                                     {
-                                        if (Grid.TryGetCellByCoordinates(x - 1, baseY, out var decalage))
+                                        if (Grid.TryGetCellByCoordinates(x - 1, baseY, out var decalage, out var _))
                                         {
-                                            AddTileToCell(decalage, SAND_TILE_NAME, true);
+                                            AddTileToCell(decalage, SAND_TILE_NAME, true, true);
                                         }
                                     }
                                 }
                             }
                             hasMoved = true;
-                            if (Grid.TryGetCellByCoordinates(x, baseY, out chosenCell))
+                            if (Grid.TryGetCellByCoordinates(x, baseY, out chosenCell, out var _))
                             {
-                                AddTileToCell(chosenCell, SAND_TILE_NAME, true);
+                                AddTileToCell(chosenCell, SAND_TILE_NAME, true, true);
                             }
                         }
                     }
@@ -292,9 +292,9 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
                             {
                                 while (offset >= baseY)
                                 {
-                                    if (Grid.TryGetCellByCoordinates(x, offset, out chosenCell))
+                                    if (Grid.TryGetCellByCoordinates(x, offset, out chosenCell, out var _))
                                     {
-                                        AddTileToCell(chosenCell, SAND_TILE_NAME, true);
+                                        AddTileToCell(chosenCell, SAND_TILE_NAME, true, true);
                                     }
                                     offset--;
                                 }
@@ -304,9 +304,9 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
                             {
                                 while (offset <= baseY)
                                 {
-                                    if (Grid.TryGetCellByCoordinates(x, offset, out chosenCell))
+                                    if (Grid.TryGetCellByCoordinates(x, offset, out chosenCell, out var _))
                                     {
-                                        AddTileToCell(chosenCell, SAND_TILE_NAME, true);
+                                        AddTileToCell(chosenCell, SAND_TILE_NAME, true, true);
                                     }
                                     offset++;
                                 }
@@ -315,7 +315,7 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
                         }
                         else
                         {
-                            AddTileToCell(chosenCell, CORRIDOR_TILE_NAME, true);
+                            AddTileToCell(chosenCell, CORRIDOR_TILE_NAME, true, true);
                         }
                     }
                 }
@@ -334,14 +334,14 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
             for (int y = Mathf.Min(y1, y2); y <= Mathf.Max(y1, y2); y++)
             {
                 int baseX = x2;
-                if (Grid.TryGetCellByCoordinates(baseX, y, out var chosenCell))
+                if (Grid.TryGetCellByCoordinates(baseX, y, out var chosenCell, out var _))
                 {
                     Vector2Int position = new(baseX, y);
                     if (IsPositionInRoom(position, out int roomIndex))
                     {
                         if (_listRooms[roomIndex] == room1 || _listRooms[roomIndex] == room2)
                         {
-                            AddTileToCell(chosenCell, ROCK_TILE_NAME, true);
+                            AddTileToCell(chosenCell, ROCK_TILE_NAME, true, true);
                         }
                         else
                         {
@@ -354,9 +354,9 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
                                     offset = baseX;
                                     if (!hasMoved)
                                     {
-                                        if (Grid.TryGetCellByCoordinates(baseX, y - 1, out var decalage))
+                                        if (Grid.TryGetCellByCoordinates(baseX, y - 1, out var decalage, out var _))
                                         {
-                                            AddTileToCell(decalage, SAND_TILE_NAME, true);
+                                            AddTileToCell(decalage, SAND_TILE_NAME, true, true);
                                             new WaitForSeconds(1);
                                         }
                                     }
@@ -368,17 +368,17 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
                                     offset = baseX;
                                     if (!hasMoved)
                                     {
-                                        if (Grid.TryGetCellByCoordinates(baseX, y - 1, out var decalage))
+                                        if (Grid.TryGetCellByCoordinates(baseX, y - 1, out var decalage, out var _))
                                         {
-                                            AddTileToCell(decalage, SAND_TILE_NAME, true);
+                                            AddTileToCell(decalage, SAND_TILE_NAME, true, true);
                                         }
                                     }
                                 }
                             }
                             hasMoved = true;
-                            if (Grid.TryGetCellByCoordinates(baseX, y, out chosenCell))
+                            if (Grid.TryGetCellByCoordinates(baseX, y, out chosenCell, out var _))
                             {
-                                AddTileToCell(chosenCell, SAND_TILE_NAME, true);
+                                AddTileToCell(chosenCell, SAND_TILE_NAME, true, true);
                             }
                         }
                     }
@@ -390,9 +390,9 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
                             {
                                 while (offset >= baseX)
                                 {
-                                    if (Grid.TryGetCellByCoordinates(offset, y, out chosenCell))
+                                    if (Grid.TryGetCellByCoordinates(offset, y, out chosenCell, out var _))
                                     {
-                                        AddTileToCell(chosenCell, SAND_TILE_NAME, true);
+                                        AddTileToCell(chosenCell, SAND_TILE_NAME, true, true);
                                     }
                                     offset--;
                                 }
@@ -402,9 +402,9 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
                             {
                                 while (offset <= baseX)
                                 {
-                                    if (Grid.TryGetCellByCoordinates(offset, y, out chosenCell))
+                                    if (Grid.TryGetCellByCoordinates(offset, y, out chosenCell, out var _))
                                     {
-                                        AddTileToCell(chosenCell, SAND_TILE_NAME, true);
+                                        AddTileToCell(chosenCell, SAND_TILE_NAME, true, true);
                                     }
                                     offset++;
                                 }
@@ -413,7 +413,7 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
                         }
                         else
                         {
-                            AddTileToCell(chosenCell, CORRIDOR_TILE_NAME, true);
+                            AddTileToCell(chosenCell, CORRIDOR_TILE_NAME, true, true);
                         }
                     }
                 }

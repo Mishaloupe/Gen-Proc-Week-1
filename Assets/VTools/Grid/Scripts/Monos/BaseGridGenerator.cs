@@ -27,7 +27,7 @@ namespace VTools.Grid
             Grid = new Grid(_gridXValue, _gridYValue, _cellSize, _startPosition, false);
         }
         
-        public void AddGridObjectToCell(Cell cell, GridObjectTemplate template, bool overrideExistingObjects)
+        public void AddGridObjectToCell(Cell cell, GridObjectTemplate template, bool overrideExistingObjects, bool isTop)
         {
             if (overrideExistingObjects && cell.ContainObject)
             {
@@ -44,16 +44,26 @@ namespace VTools.Grid
                 return;
             }
             
-            GridObjectFactory.SpawnOnGridFrom(template, cell, Grid, transform);
+            GridObjectFactory.SpawnOnGridFrom(template, cell, Grid, transform, isTop);
         }
 
         public void ClearGrid()
         {
-            foreach (var cell in Grid.Cells)
+            if (Grid.Width * Grid.Lenght > 250 * 250 || Grid.Cells2[Grid.Width * Grid.Lenght - 1] != null)
             {
-                cell.ClearGridObject();
+                for (int i = 0; i < Grid.Cells.Count; i++)
+                {
+                    Grid.Cells[i].ClearGridObject();
+                    Grid.Cells2[i].ClearGridObject();
+                }
+            } else
+            {
+                foreach (var cell in Grid.Cells)
+                {
+                    cell.ClearGridObject();
+                }
             }
-            
+
             Grid = null;
         }
     }

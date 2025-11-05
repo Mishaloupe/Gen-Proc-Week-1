@@ -3,6 +3,7 @@ using UnityEngine;
 public class Node
 {
     public RectInt rect;
+    #nullable enable
     public Node? child1;
     public Node? child2;
 

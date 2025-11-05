@@ -7,13 +7,16 @@ namespace VTools.Grid
     public class Grid
     {
         private readonly Cell[,] _gridArray;       
+        private readonly Cell[,] _gridArray2;       
         private readonly List<Cell> _cells;
+        private readonly List<Cell> _cells2;
 
         public Vector3 OriginPosition { get; }
         public float CellSize { get; }
         public int Width { get; }
         public int Lenght { get; }
         public IReadOnlyList<Cell> Cells => _cells;
+        public IReadOnlyList<Cell> Cells2 => _cells2;
 
         // ------------------------------------------------------------------------- CONSTRUCTOR -------------------------------------------------------------------------
         public Grid(int width, int lenght, float cellSize, Vector3 originPosition, bool showDebug)
@@ -24,7 +27,9 @@ namespace VTools.Grid
             OriginPosition = originPosition;
 
             _gridArray = new Cell[width, lenght];
+            _gridArray2 = new Cell[width, lenght];
             _cells = new List<Cell>();
+            _cells2 = new List<Cell>();
 
             for (int x = 0; x < _gridArray.GetLength(0); x++)
             {
@@ -32,8 +37,11 @@ namespace VTools.Grid
                 {
                     //Create a new cell and add it to cell list
                     Cell cell = new Cell(x, y, cellSize);
+                    Cell cell2 = new Cell(x, y, cellSize);
                     _cells.Add(cell);
+                    _cells2.Add(cell2);
                     _gridArray[x, y] = cell;
+                    _gridArray2[x, y] = cell2;
                 }
             }
 
@@ -69,22 +77,25 @@ namespace VTools.Grid
         /// <param name="y">The Y coordinate.</param>
         /// <param name="foundCell">The cell potentially found on the coordinates.</param>
         /// <returns>True if a cell is found, otherwise false.</returns>
-        public bool TryGetCellByCoordinates(int x, int y, out Cell foundCell)
+        public bool TryGetCellByCoordinates(int x, int y, out Cell foundCell, out Cell foundCell2)
         {
             if (x >= 0 && x < Width && y >= 0 && y < Lenght)
             {
                 foundCell = _gridArray[x, y];
+                foundCell2 = _gridArray2[x, y];
                 return true;
             }
 
             foundCell = null;
+            foundCell2 = null;
             return false;
         }
 
-        public bool TryGetCellByCoordinates(Vector2Int coordinates, out Cell foundCell)
+        public bool TryGetCellByCoordinates(Vector2Int coordinates, out Cell foundCell, out Cell foundCell2)
         {
-            var cellFound = TryGetCellByCoordinates(coordinates.x, coordinates.y, out Cell cell);
+            var cellFound = TryGetCellByCoordinates(coordinates.x, coordinates.y, out Cell cell, out Cell cell2);
             foundCell = cell;
+            foundCell2 = cell2;
 
             return cellFound;
         }
@@ -95,17 +106,19 @@ namespace VTools.Grid
         /// <param name="worldPosition">The position you want to test.</param>
         /// <param name="foundCell">The cell potentially found on the world position.</param>
         /// <returns>True if a cell is found, otherwise false.</returns>
-        public bool TryGetCellByPosition(Vector3 worldPosition, out Cell foundCell)
+        public bool TryGetCellByPosition(Vector3 worldPosition, out Cell foundCell, out Cell foundCell2)
         {
             GetCellCoordinates(worldPosition, out var x, out var y);
 
-            if (TryGetCellByCoordinates(x, y, out var cell))
+            if (TryGetCellByCoordinates(x, y, out var cell, out var cell2))
             {
                 foundCell = cell;
+                foundCell2 = cell2;
                 return true;
             }
 
             foundCell = null;
+            foundCell2 = null;
             return false;
         }
 
@@ -158,7 +171,7 @@ namespace VTools.Grid
             {
                 for (int y = 0; y < _gridArray.GetLength(1); y++)
                 {
-                    if (!TryGetCellByCoordinates(x,y, out var cell))
+                    if (!TryGetCellByCoordinates(x,y, out var cell, out var cell2))
                     {
                         continue;
                     }

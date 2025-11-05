@@ -7,7 +7,7 @@ namespace VTools.Grid
     public class Cell
     {
         private readonly float _size;
-        private Tuple<GridObject, GridObjectController> _object;
+        public Tuple<GridObject, GridObjectController> _object;
         
         public Vector2Int Coordinates { get; }
         public bool ContainObject => _object != null;

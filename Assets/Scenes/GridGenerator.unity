@@ -412,8 +412,8 @@ MonoBehaviour:
   _startPosition: {x: 0, y: 0, z: 0}
   _generationMethod: {fileID: 11400000, guid: a5883eb836244794a9661968edaa4a51, type: 2}
   _drawDebug: 0
-  _seed: 6767
-  _stepDelay: 1
+  _seed: 1212
+  _stepDelay: 200
 --- !u!4 &1922166660
 Transform:
   m_ObjectHideFlags: 0
