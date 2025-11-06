@@ -28,6 +28,7 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
         [Range(0, 8)]
         [SerializeField] private int _nbVoisins = 4;
         [SerializeField] private List<CATiles> _allCells = new();
+        [SerializeField] private int[,] _allCells2;
         [SerializeField] bool isMapTiny;
         [SerializeField] bool ConwaysGameOfLife = false;
 
@@ -47,8 +48,8 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
             Debug.Log("Noise created.");
 
             // Waiting between steps to see the result.
-            //await UniTask.NextFrame(cancellationToken);
-            await UniTask.Delay(GridGenerator.StepDelay, cancellationToken: cancellationToken);
+            await UniTask.NextFrame(cancellationToken);
+            //await UniTask.Delay(GridGenerator.StepDelay, cancellationToken: cancellationToken);
 
 
             for (int i = 0; i < _maxSteps; i++)
@@ -67,8 +68,8 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
                 Debug.Log($"Step {i + 1} complete.");
 
                 // Waiting between steps to see the result.
-                //await UniTask.NextFrame(cancellationToken);
-                await UniTask.Delay(GridGenerator.StepDelay, cancellationToken: cancellationToken);
+                await UniTask.NextFrame(cancellationToken);
+                //await UniTask.Delay(GridGenerator.StepDelay, cancellationToken: cancellationToken);
             }
         }
 
@@ -80,18 +81,18 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
                 {
                     if (RandomService.Chance(_noiseDensity))
                     {
-                        if (Grid.TryGetCellByCoordinates(i, j, out var chosenCell, out var chosenCell2))
+                        if (Grid.TryGetCellByCoordinates(i, j, out var topCell, out var bottomCell))
                         {
-                            AddTileToCell(chosenCell, GRASS_TILE_NAME, false, true);
-                            AddTileToCell(chosenCell2, WATER_TILE_NAME, false, false);
+                            AddTileToCell(topCell, GRASS_TILE_NAME, false, true);
+                            AddTileToCell(bottomCell, WATER_TILE_NAME, false, false);
                         }
                     }
                     else
                     {
-                        if (Grid.TryGetCellByCoordinates(i, j, out var chosenCell, out var chosenCell2))
+                        if (Grid.TryGetCellByCoordinates(i, j, out var topCell, out var bottomCell))
                         {
-                            AddTileToCell(chosenCell, WATER_TILE_NAME, false, true);
-                            AddTileToCell(chosenCell2, GRASS_TILE_NAME, false, false);
+                            AddTileToCell(topCell, WATER_TILE_NAME, false, true);
+                            AddTileToCell(bottomCell, GRASS_TILE_NAME, false, false);
                         }
                     }
                 }
@@ -166,7 +167,8 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
                         }
                     }
                 }
-            } else
+            }
+            else
             {
                 foreach (CATiles tiles in _allCells)
                 {
