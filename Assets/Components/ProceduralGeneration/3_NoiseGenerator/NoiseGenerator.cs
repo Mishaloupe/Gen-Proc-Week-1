@@ -62,21 +62,7 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
             // Check for cancellation²
             cancellationToken.ThrowIfCancellationRequested();
 
-            _noise.SetSeed(RandomService.Seed); //7797 pas mal ouais ca marche
-            _noise.SetNoiseType(_noiseType);
-            _noise.SetFrequency(_frequency);
-
-            _noise.SetFractalType(_fractalType);
-            _noise.SetFractalOctaves(_fractalOctaves);
-            _noise.SetFractalLacunarity(_lacunarity);
-            _noise.SetFractalGain(_gain);
-            _noise.SetFractalWeightedStrength(_wStrength);
-            _noise.SetFractalPingPongStrength(_ppStrength);
-
-            _noise.SetCellularDistanceFunction(_cellularDistanceFunction);
-            _noise.SetCellularReturnType(_cellularReturnType);
-            _noise.SetCellularJitter(_jitter);
-
+            CreateNoise();
             BuildMap();
 
             // Waiting between steps to see the result.
@@ -116,6 +102,25 @@ namespace Components.ProceduralGeneration.SimpleRoomPlacement
                 }
             }
         }
+
+        public void CreateNoise()
+        {
+            _noise.SetSeed(RandomService.Seed);
+            _noise.SetNoiseType(_noiseType);
+            _noise.SetFrequency(_frequency);
+
+            _noise.SetFractalType(_fractalType);
+            _noise.SetFractalOctaves(_fractalOctaves);
+            _noise.SetFractalLacunarity(_lacunarity);
+            _noise.SetFractalGain(_gain);
+            _noise.SetFractalWeightedStrength(_wStrength);
+            _noise.SetFractalPingPongStrength(_ppStrength);
+
+            _noise.SetCellularDistanceFunction(_cellularDistanceFunction);
+            _noise.SetCellularReturnType(_cellularReturnType);
+            _noise.SetCellularJitter(_jitter);
+        }
+
 
         public float GetNoiseData(FastNoiseLite noise, int x, int z)
         {

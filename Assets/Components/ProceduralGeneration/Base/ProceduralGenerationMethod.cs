@@ -27,6 +27,16 @@ namespace Components.ProceduralGeneration
         protected const string ROCK_TILE_NAME = "Rock";
         protected const string SAND_TILE_NAME = "Sand";
 
+        protected const string DESERT_TILE_NAME = "DESERT_TILE";
+        protected const string JUNGLE_TILE_NAME = "JUNGLE_TILE";
+        protected const string PLAINS_TILE_NAME = "PLAINS_TILE";
+        protected const string SAVANNA_TILE_NAME = "SAVANNA_TILE";
+        protected const string SNOW_TILE_NAME = "SNOW_TILE";
+        protected const string TAIGA_TILE_NAME = "TAIGA_TILE";
+        protected const string TUNDRA_TILE_NAME = "TUNDRA_TILE";
+
+
+
         // -------------------------------------- BASE ----------------------------------------------------
         
         public void Initialize(ProceduralGridGenerator gridGenerator, RandomService randomService)
