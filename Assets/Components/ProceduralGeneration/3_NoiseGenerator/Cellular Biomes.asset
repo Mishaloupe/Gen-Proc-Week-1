@@ -10,7 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a7d001c91e57cc64c921d2cb960ffed5, type: 3}
-  m_Name: New Noise Generator
+  m_Name: Cellular Biomes
   m_EditorClassIdentifier: 
   _maxSteps: 10
-  _maxRooms: 5
+  _noiseType: 2
+  _frequency: 0.0875
+  _amplitude: 1
+  _fractalType: 0
+  _fractalOctaves: 3
+  _lacunarity: 2
+  _gain: 0.5
+  _wStrength: 0
+  _ppStrength: 2
+  _cellularDistanceFunction: 3
+  _cellularReturnType: 0
+  _jitter: -2
+  _water: -0.6
+  _sand: -0.3
+  _room: 0
+  _corridor: 0.3
+  _grass: 0.6
+  _rock: 1

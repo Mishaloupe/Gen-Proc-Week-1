@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Rock
   m_EditorClassIdentifier: 
   _name: Rock
-  _view: {fileID: 3729838110348376328, guid: af527524f26b70145b2a9b311c340827, type: 3}
+  _view: {fileID: 2900939021189304181, guid: 40c31fa5b51f0304998db7944a631289, type: 3}
