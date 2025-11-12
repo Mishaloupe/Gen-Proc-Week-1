@@ -16,5 +16,28 @@
 Gen-Proc-Week-1 est un repo contenant le nécessaire de base afin de  customiser des générations procédurales de base.
 
 ## Getting Started
-Pour démarrer il faudra mettre un ProceduralGridGenerator dans la scène.  
-<img src="Documentation/img1.png?raw=true"/>
+Pour démarrer il faudra mettre un ```ProceduralGridGenerator``` dans la scène.  
+<img src="Documentation/img1.png?raw=true"/>  
+Ensuite, il vous faudra créer un nouveau script dérivant de la classe ```ProceduralGenerationMethod```.  
+Faites votre génération procédurale dans ce dernier et créez un asset de ce script.  
+<img src="Documentation/asset.png?raw=true"/>  
+Enfin, références cet asset dans votre ```ProceduralGridGenerator``` et vous aurez fini l'installation.
+<img src="Documentation/endsetup.png?raw=true"/>
+
+## Simple Room Placement
+Ce script commence par générer des salles et les placer si elle n'overlapent pas d'autres salles.  
+Ensuite il va générer des couloirs pour relier les salles de la plus ancienne créée à la plus récente. Les couloirs évitent et coutournent les salles.  
+<img src="Documentation/Simpleroomplacement.png?raw=true"/>
+
+## BSP
+Ce script va également générer des salles au début mais avec un système de nodes. Il découpe la map jusqu'à atteindre le nombre de nodes enfants demandé. Une fois le nombre de nodes enfants atteint il va s'arrêter et instancier des salles à ces positions.
+Ensuite il va générer des couloirs pour relier les salles entre les nodes les plus proches. Les couloirs évitent et coutournent les salles. (même fonction d'évitement que le script précédent)  
+<img src="Documentation/BSP.png?raw=true"/>
+
+## Cellular Automata
+Pour ce script on change des salles. Générons du terrain maintenant. D'abord on commence par du noise simple. Juste un true ou false pour chaque case de la map. Ensuite on itère, si on respecte certaines conditions (ici +- de 4 cellules true autour de celle qu'on regarde). Si la condition est respectée on passe la cellule qu'on regarde en true, sinon on la passe en false. On fait cette boucle pour chaque case de notre map.
+<img src="Documentation/Cellularautomata.png?raw=true"/>  
+
+## Noise Generator  
+De nouveau une génération de terrain mais bien plus précise. On passera par la librairie FastNoiseLite afin de générer notre bruit. On le créé, lui assigne plusieurs paramètres et la librairie fait le reste il ne nous reste qu'à instancier nos tiles en fonction du résultat.
+<img src="Documentation/NoiseGenerator.png?raw=true"/>
