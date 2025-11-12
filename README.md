@@ -20,6 +20,21 @@ Pour démarrer il faudra mettre un ```ProceduralGridGenerator``` dans la scène.
 <img src="Documentation/img1.png?raw=true"/>  
 Ensuite, il vous faudra créer un nouveau script dérivant de la classe ```ProceduralGenerationMethod```.  
 Faites votre génération procédurale dans ce dernier et créez un asset de ce script.  
+Il vous faudra rentrer votre logique dans cette fonction :  
+```
+protected override async UniTask ApplyGeneration(CancellationToken cancellationToken)
+{
+    //Définition des variables
+
+    // Check for cancellation
+    cancellationToken.ThrowIfCancellationRequested();
+
+    // Logique du code
+
+    // Waiting between steps to see the result.
+    await UniTask.Delay(GridGenerator.StepDelay, cancellationToken: cancellationToken);
+}
+```
 <img src="Documentation/asset.png?raw=true"/>  
 Enfin, références cet asset dans votre ```ProceduralGridGenerator``` et vous aurez fini l'installation.
 <img src="Documentation/endsetup.png?raw=true"/>
