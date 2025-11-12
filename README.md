@@ -35,7 +35,7 @@ Ensuite il va générer des couloirs pour relier les salles entre les nodes les 
 <img src="Documentation/BSP.png?raw=true"/>
 
 ## Cellular Automata
-Pour ce script on change des salles. Générons du terrain maintenant. D'abord on commence par du noise simple. Juste un true ou false pour chaque case de la map. Ensuite on itère, si on respecte certaines conditions (ici +- de 4 cellules true autour de celle qu'on regarde). Si la condition est respectée on passe la cellule qu'on regarde en true, sinon on la passe en false. On fait cette boucle pour chaque case de notre map.
+Pour ce script on change des salles. Générons du terrain maintenant. D'abord on commence par du noise simple. Juste un true ou false pour chaque case de la map. Ensuite on itère, si on respecte certaines conditions (ici +- de 4 cellules true autour de celle qu'on regarde). Si la condition est respectée on passe la cellule qu'on regarde en true, sinon on la passe en false. On fait cette boucle pour chaque case de notre map.  
 <img src="Documentation/Cellularautomata.png?raw=true"/>  
 
 ## Noise Generator  
