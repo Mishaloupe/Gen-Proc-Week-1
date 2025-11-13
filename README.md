@@ -57,7 +57,7 @@ Lorsque la taille de la map depasse 250x250 un autre layer de tiles sera ajouté
 
 ## Noise Generator  
 De nouveau une génération de terrain mais bien plus précise. On passera par la librairie FastNoiseLite afin de générer notre bruit. On le créé, lui assigne plusieurs paramètres et la librairie fait le reste il ne nous reste qu'à instancier nos tiles en fonction du résultat.
-<img src="Documentation/NoiseGenerator.png?raw=true"/>  
+<img src="Documentation/BiomeGenerator.png?raw=true"/>  
 
 ## Advanced Noise Generator  
 De nouveau une génération de terrain mais encore affinée par rapport au noise simple. On passera toujours par la librairie FastNoiseLite afin de générer notre bruit. Mais cette fois ci on en génère 3. Un pour la hauteur, pour l'humidité et pour la chaleur de la map afin de varier les biomes.On leur assigne différents paramètres et la librairie fait le reste il ne nous reste qu'à instancier nos tiles en fonction du résultat global des 3 noises combiné.  
