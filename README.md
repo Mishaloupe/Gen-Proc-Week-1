@@ -51,8 +51,14 @@ Ensuite il va générer des couloirs pour relier les salles entre les nodes les 
 
 ## Cellular Automata
 Pour ce script on change des salles. Générons du terrain maintenant. D'abord on commence par du noise simple. Juste un true ou false pour chaque case de la map. Ensuite on itère, si on respecte certaines conditions (ici +- de 4 cellules true autour de celle qu'on regarde). Si la condition est respectée on passe la cellule qu'on regarde en true, sinon on la passe en false. On fait cette boucle pour chaque case de notre map.  
+Lorsque la taille de la map depasse 250x250 un autre layer de tiles sera ajouté. Cela rend plus long l'instanciation mais fait gagner beaucoup de temps sur les changements de tiles. C'est donc un ajout rentable sur les grosses grilles, d'où la taille minimum à 250x250.  
 <img src="Documentation/Cellularautomata.png?raw=true"/>  
+<img src="Documentation/CellularAutomataSecond.png?raw=true"/>  
 
 ## Noise Generator  
 De nouveau une génération de terrain mais bien plus précise. On passera par la librairie FastNoiseLite afin de générer notre bruit. On le créé, lui assigne plusieurs paramètres et la librairie fait le reste il ne nous reste qu'à instancier nos tiles en fonction du résultat.
-<img src="Documentation/NoiseGenerator.png?raw=true"/>
+<img src="Documentation/NoiseGenerator.png?raw=true"/>  
+
+## Advanced Noise Generator  
+De nouveau une génération de terrain mais encore affinée par rapport au noise simple. On passera toujours par la librairie FastNoiseLite afin de générer notre bruit. Mais cette fois ci on en génère 3. Un pour la hauteur, pour l'humidité et pour la chaleur de la map afin de varier les biomes.On leur assigne différents paramètres et la librairie fait le reste il ne nous reste qu'à instancier nos tiles en fonction du résultat global des 3 noises combiné.  
+<img src="Documentation/AdvancedNoiseGenerator.png?raw=true"/>
