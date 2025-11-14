@@ -36,7 +36,7 @@ protected override async UniTask ApplyGeneration(CancellationToken cancellationT
 }
 ```
 <img src="Documentation/asset.png?raw=true"/>  
-Enfin, références cet asset dans votre  ```ProceduralGridGenerator``` et vous aurez fini l'installation.
+Enfin, références cet asset dans votre ```ProceduralGridGenerator``` et vous aurez fini l'installation.
 <img src="Documentation/endsetup.png?raw=true"/>
 
 ## Simple Room Placement
